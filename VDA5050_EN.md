@@ -942,7 +942,7 @@ The corridor attribute of an edge leads to two different types of nodes inside a
 - A *way node* contains no actions or non blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely. 
 
 The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute. 
-*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviation``` control multiple behaviours. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
+*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
 
 - The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
 
