@@ -938,22 +938,21 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 The corridor attribute of an edge leads to two different types of nodes inside an order: *goal nodes* and *way nodes*.
 
-- A *goal node* contains actions and therefore the vehicle has to reach this nodes precisely. The fleet management can define via the `allowedDeviationXY` and `allowedDeviationTheta` how precisely the node has to be reached. If no deviation is defined no deviation is allowed (no deviation means within the normal tolerance of the AGV manufacturer).
-- A *way node* contains no actions and therefore the shuttle may pass this node not precisely. The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect.
+- A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and therefore the vehicle has to reach this nodes precisely (means within the normal tolerance of the vehicle manufacturer).
+- A *way node* contains no actions or non blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely. 
 
-*(Remarks: Consulting  `allowedDeviationXY` and `allowedDeviationTheta` to detect whether a way point is passed or not makes it difficult to define a correct drivable order and not defeating the reason using the corridor attribute. While the corridor attribute covers the whole vehicle contour an allowed deviation refers to the control point of the vehicle. This makes it not trivial to define right deviation range according to the given corridor polygon or vice versa. Way points should be used defining the navigation area together with the corridor attribute and traffic control.)*
+The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute. 
+*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviation``` control multiple behaviours. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
 
-The AGV/AMR decides on its own, when a node should count as traversed. Generally, the AGV’s / AMR's should be fully inside the intersection between the polygons of the current and the following edge. *(Remark: A criteria (but not necessarily unique) might be the perpendicular distance to the edges of the current base.)*
+- The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
 
-An AGV coming from an edge without a corridor attribute is not allowed to use the corridor of a subsequent edge until the next node (first node inside the node state array) is traversed. 
+- A vehicle driving on an edge without a corridor attribute is not allowed to use the corridor of a subsequent edge for navigation until the end node of the current edge (first node inside the node state array) is traversed. 
+The vehicle decides on its own, when this node should count as traversed.
+Generally, the vehicles control point should be within the node’s `deviationRangeXY` and its orientation within `deviationRangeTheta`.
 
-An AGV coming from an edge with a corridor attribute followed by an edge without a corridor attribute shall be driving on the subsequent edge when leaving the corridor polygon. *(Remark: This is likewise defining a deviation range )*
+- A vehicle coming from an edge with a corridor attribute followed by an edge without a corridor attribute shall reach the end node of the current edge precisely (means within the normal tolerance of the vehicle manufacturer) before counting this node as traversed.
 
-![Figure xx Example path of an AGV transition form an edge with corridor attribute to an edge without corridor attribute.](./assets/Transition.png)
->Figure x Example path of an AGV transition form an edge with corridor attribute to an edge without corridor attribute.
-
-
-A decision point is reached when vehicle reaches the orthogonal line which is going through the decision point.
+- A vehicle shall reach a decision point precisely (means within the normal tolerance of the vehicle manufacturer).
 
 ### <a name="Br"></a> 6.10.3 Base request 
 
