@@ -763,23 +763,27 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which plans autonomically the path from one node to the next node, the optional corridor object defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are also valid for every part of the vehicle including the load. If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge. 
+For a vehicle, which is able to plan independant the path from one node to the next node, the optional corridor object enables this
+vehicle to deviate from the edge for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load. **If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.** The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide vehicle with the ability to avoid obstacles. The corridor shall spatially enclose the edge, so that the path of the vehicle is still predictable for a human observer.
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
 >Figure 16 Corridor with boundaries.
 
-The corridor object defines a simple polygone (no self intersection, no holes). The coordinates of the vertices are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). Polygons of non released edges aren't part of the current corridor.
+The corridor object defines a simple polygon (no self intersection, no holes). The coordinates of the vertices are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). **Polygons of non released edges aren't part of the current corridor.**
 A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move. The union of all corridor polygons of the current base defines the navigation space (see figure 18).
+
+(*Remarks: A corridor polygon defines which area a vehicle can use for navigation. It is accepted by the operator that the vehicle uses this area for driving. It is not intended to use the corridor to define a specific trajectory.
+It is also not intended that this attribute is used to specify a larger area in which a vehicle is allowed to plan independently from the edge start node to the edge end node with very different paths as result. Especially if the defined corridor encloses also larger parts of other distant edges. In this case the upcoming concept of "zones" is the preferred solution.*).
 
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon1.png)
 >Figure 17 Three edges with their current corridor defined by a simple polygon.
 
 The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the AMR with corridor information which allows the vehicle to move again.
 
-![Figure 18 The union of all polygons defines the available area for path planning.](./assets/Polygon2.png)
->Figure 18 The union of all polygons defines the available area for path planning..
+![Figure 18 The union of the released polygons defines the available area for path planning.](./assets/Polygon2.png)
+>Figure 18 The union of the released polygons defines the available area for path planning.
 
-If the AGV is using the corridor information for free navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. See also section 6.10.2 for further information.
+If the AGV is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error. See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
 If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
 
