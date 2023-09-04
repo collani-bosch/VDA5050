@@ -763,7 +763,7 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which is able to plan independant the path from one node to the next node, the optional corridor object enables this
+For a vehicle, which is able to plan independent the path from one node to the next node, the optional corridor object enables this
 vehicle to deviate from the edge for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load. **If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.** The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide vehicle with the ability to avoid obstacles. The corridor shall spatially enclose the edge, so that the path of the vehicle is still predictable for a human observer.
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
