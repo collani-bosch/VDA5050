@@ -762,11 +762,13 @@ rightWidth <br><br>**}**|  | float64 | Defines the width of the corridor in mete
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which is able to plan independent the path from one node to the next node, the optional corridor object enables this
-vehicle to deviate from the edge for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate.
-In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load.
+For a vehicle, which is able to plan independent the path from one node to the next node, the optional
+corridor object enables this vehicle to deviate from the edge for obstacle avoidance and defines the
+boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines
+the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load.
 **If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.**
-The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide vehicle with the ability to avoid obstacles.
+The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide
+vehicle with the ability to avoid obstacles.
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1.png)
 >Figure 16 Corridor with boundaries.
@@ -782,9 +784,12 @@ It is also not intended that this attribute is used to specify a larger area in 
 ![Figure 17 The sum of all contiguous corridors defines the available area for path planning.](./assets/Corridor-2.png)
 >Figure 17 The sum of all contiguous corridors defines the available area for path planning.
 
-The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
+The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor.
+If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
+The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
 
-If the AGV is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error.
+If the AGV is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error.
+It is up to MC how to deal with these specific error.
 
 If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
 
@@ -945,11 +950,13 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 The corridor attribute of an edge leads to two different types of nodes inside an order: *goal nodes* and *way nodes*.
 
-- A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and therefore the vehicle has to reach these nodes precisely (means within the normal tolerance of the vehicle manufacturer).
+- A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and
+therefore the vehicle has to reach these nodes precisely (means within the normal tolerance of the vehicle manufacturer).
 - A *way node* contains no actions or non-blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely.
 
 The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute.
-*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
+*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors.
+They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
 
 - The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge.
 
