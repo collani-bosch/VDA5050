@@ -956,6 +956,19 @@ Generally, the vehicles control point should be within the node’s `deviationRa
 
 - A vehicle shall reach a decision point precisely (means within the normal tolerance of the vehicle manufacturer).
 
+#### Example
+
+Figure 19 shows an order with the edge *e1 ... e4* and nodes *1... 5* with no actions. Edge *e4* and node *5* aren't released and therefore part of the horizon.
+
+- The available area for the vehicle on node 1 to plan routes is the union of the corridors attached to edges e1, e2 and e3.
+- The vehicle must move into the intersection of the corridors of edge *e1* and *e2*, because it is required to report node *1* and edge *e1* as traversed. Even if the corridor of *e3* would overlap with the corridor of *e1*, this requirement must be met. Once the vehicle reports the *e1* and node *1* as traversed, the corridor of *e1* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
+- In the next step, the vehicle must move into the intersection of the corridors of edge *e2* and *e3* without leaving the corridor of *e2* and *e3*, because this is required to report node *2* and edge *e2* as traversed. Once the vehicle reports the *e2* and node *2* as traversed, the corridor of *e2* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
+- The decision node *4* must be reached precisely without leaving the corridor of *e3*, since *e4* is not released yet..
+
+![Figure 19 Allowed areas when moving along edges with a corridor attribute.](./assets/Polygon4.png)
+>Figure 19 Allowed areas when moving along edges with a corridor attribute.
+
+
 ### <a name="Br"></a> 6.10.3 Base request 
 
 If the AGV detects, that its base is running low, it can set the `newBaseRequest` flag to `true` to prevent unnecessary braking.
