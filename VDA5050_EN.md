@@ -763,26 +763,46 @@ y |  | float64 | Y coordinate described in the world coordinate system.
 
 ### <a name = "Corridor"></a> 6.7.1 Corridor
 
-For a vehicle, which is able to plan independent the path from one node to the next node, the optional corridor object enables this vehicle to deviate from the edge for obstacle avoidance and defines the boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the vehicle including the load. **If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.** The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide vehicle with the ability to avoid obstacles. The corridor shall spatially enclose the edge, so that the path of the vehicle is still predictable for a human observer.
+For a vehicle, which is able to plan independent the path from one node to the next node, the optional
+corridor object enables this vehicle to deviate from the edge for obstacle avoidance and defines the
+boundaries in which the vehicle is allowed to operate. In contrast to an allowed deviation the corridor defines
+the boundaries which are not only valid for the vehicle control point, but they are valid for every part of the
+vehicle including the load.
+**If there is no need to avoid an obstacle the vehicle shall drive on or near by the current edge.**
+The behavior of a vehicle which uses the corridor attribute of an edge is still the behavior of a line guide
+vehicle with the ability to avoid obstacles.
+The corridor shall spatially enclose the edge, so that the path of the vehicle is still predictable for a human observer.
 
 ![Figure 16 Corridor with boundaries](./assets/Corridor-1a.png)
 >Figure 16 Corridor with boundaries.
 
-The corridor object defines a simple polygon (no self intersection, no holes). The coordinates of the vertices are inside the coordinate system of the edge start node. The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17). The union of all corridor polygons of the current base defines the area available for route planning. **Polygons of non released edges aren't part of this area.**
+The corridor object defines a simple polygon (no self intersection, no holes).
+The coordinates of the vertices are inside the coordinate system of the edge start node.
+The boundaries of a single corridor polygon shall be defined in a way that the polygons of two consecutive edges overlaps so
+that the vehicle can travel form one edge to the next and the nodes of the order can be reached by the vehicle without disregarding the corridor boundaries (see figure 17).
+The union of all corridor polygons of the current base defines the area available for route planning. **Polygons of non released edges aren't part of this area.**
 A vehicle which is pushed back manually on a traversed or not released edge is outside the corridor, therefore outside the allowed navigation space and isn't allowed to move.
 
-(*Remarks: A corridor polygon defines which area a vehicle can use for navigation. It is accepted by the operator that the vehicle uses this area for driving. It is not intended to use the corridor to define a specific trajectory. It is also not intended that this attribute is used to specify a larger area in which a vehicle is allowed to plan independently from the edge start node to the edge end node with very different paths as result. Especially if the defined corridor encloses also larger parts of other distant edges. In this case the upcoming concept of "zones" is the preferred solution.*).
+(*Remarks: A corridor polygon defines which area a vehicle can use for navigation.
+It is accepted by the operator that the vehicle uses this area for driving.
+It is not intended to use the corridor to define a specific trajectory.
+It is also not intended that this attribute is used to specify a larger area in which a vehicle is allowed to plan independently from the edge start node to the edge end node with very different paths as result.
+Especially if the defined corridor encloses also larger parts of other distant edges.
+In this case the upcoming concept of "zones" is the preferred solution.*).
 
 ![Figure 17 Three edges with their current corridor defined by a simple polygon.](./assets/Polygon7.png)
 >Figure 17 Three edges with their current corridor defined by a simple polygon. A vehicle at node *1* can use the corridors of edge *e1* and *e2* for planning. 
 
-The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor. If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error. The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
+The motion control software of the vehicle shall check permanently if a part of the vehicle or of its load is outside of the corridor.
+If this is the case the vehicle shall stop, because it is outside of the allowed navigation space, and to report an  "outOfCorridor" error.
+The MC can decide if a user interaction is necessary or if the vehicle can continue driving by canceling the current and sending a new order to the vehicle with corridor information which allows the vehicle to move again.
 
-If the vehicle is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error. It is up to MC how to deal with these specific error.
+If the vehicle is using the corridor information for independent navigation and it cannot determine a path inside these allowed navigation space, it is recommended  to signal MC that the vehicle isn't able to move further on by setting an appropriate error.
+It is up to MC how to deal with these specific error.
 
 If the vehicle supports the `trajectory` and `corridor` attribute MC shall not use both attributes concurrent at the same edge.
 
- See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
+See also section [6.10.2 Traversal of nodes and entering/leaving edges, triggering of actions](#Tonaeletoa) for further information.
 
 
 ## <a name="Actions"></a> 6.8 Actions
@@ -940,13 +960,18 @@ An exception to this rule is, if the AGV has to pause on the edge (because of a 
 
 The corridor attribute of an edge leads to two different types of nodes inside an order: *goal nodes* and *way nodes*.
 
-- A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and therefore the vehicle has to reach these nodes precisely (means within the normal tolerance of the vehicle manufacturer).
+- A *goal node* contains blocking actions (```blockingType``` is ```HARD```or ```SOFT```) and
+therefore the vehicle has to reach these nodes precisely (means within the normal tolerance of the vehicle manufacturer).
 - A *way node* contains no actions or non-blocking actions (```blockingType``` is ```NONE```) and therefore the shuttle may pass this node not precisely. 
 
 The node attributes  `allowedDeviationXY` and `allowedDeviationTheta`  have no effect on nodes which are the end node of an edge with a corridor attribute. 
-*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors. They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered. Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes. Therefore they have no effect.)*
+*(Remarks: The node attributes ```allowedDeviationXY``` and ```allowedDeviationTheta``` control multiple behaviors.
+They control how precisely a vehicle must reach a node physically as well as in which distance to the node the execution of actions must be triggered.
+Taking these attributes into account would contradict the use of corridors or would lead to a different attribute semantic together with corridor attributes.
+Therefore they have no effect.)*
 
-- The vehicle decides on its own, when a node should count as traversed. Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
+- The vehicle decides on its own, when a node should count as traversed. 
+Generally, the vehicle should be fully inside the intersection between the corridor of the current and the following edge. 
 
 - A vehicle driving on an edge without a corridor attribute is not allowed to use the corridor of a subsequent edge for navigation until the end node of the current edge (first node inside the node state array) is traversed. 
 The vehicle decides on its own, when this node should count as traversed.
@@ -961,8 +986,11 @@ Generally, the vehicles control point should be within the node’s `deviationRa
 Figure 19 shows an order with the edge *e1 ... e4* and nodes *1... 5* with no actions. Edge *e4* and node *5* aren't released and therefore part of the horizon.
 
 - The available area for the vehicle on node 1 to plan routes is the union of the corridors attached to edges e1, e2 and e3.
-- The vehicle must move into the intersection of the corridors of edge *e1* and *e2*, because it is required to report node *1* and edge *e1* as traversed. Even if the corridor of *e3* would overlap with the corridor of *e1*, this requirement must be met. Once the vehicle reports the *e1* and node *1* as traversed, the corridor of *e1* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
-- In the next step, the vehicle must move into the intersection of the corridors of edge *e2* and *e3* without leaving the corridor of *e2* and *e3*, because this is required to report node *2* and edge *e2* as traversed. Once the vehicle reports the *e2* and node *2* as traversed, the corridor of *e2* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
+- The vehicle must move into the intersection of the corridors of edge *e1* and *e2*, because it is required to report node *1* and edge *e1* as traversed.
+Even if the corridor of *e3* would overlap with the corridor of *e1*, this requirement must be met.
+Once the vehicle reports the *e1* and node *1* as traversed, the corridor of *e1* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
+- In the next step, the vehicle must move into the intersection of the corridors of edge *e2* and *e3* without leaving the corridor of *e2* and *e3*, because this is required to report node *2* and edge *e2* as traversed.
+Once the vehicle reports the *e2* and node *2* as traversed, the corridor of *e2* isn't any longer part of the base and the corresponding corridor is not longer part of the available navigation area.
 - The decision node *4* must be reached precisely without leaving the corridor of *e3*, since *e4* is not released yet..
 
 ![Figure 19 Allowed areas when moving along edges with a corridor attribute.](./assets/Polygon4.png)
